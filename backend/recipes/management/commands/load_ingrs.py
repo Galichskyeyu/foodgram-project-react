@@ -6,7 +6,7 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = 'Загрузка ингридиентов из csv'
+    help = 'Загрузка ингридиентов'
 
     def handle(self, *args, **kwargs):
         data_path = settings.BASE_DIR
@@ -18,4 +18,4 @@ class Command(BaseCommand):
             reader = csv.DictReader(file)
             Ingredient.objects.bulk_create(
                 Ingredient(**data) for data in reader)
-        self.stdout.write(self.style.SUCCESS('Ингридиенты успешно загружены.'))
+        self.stdout.write(self.style.SUCCESS('Ингридиенты загружены.'))

@@ -10,6 +10,6 @@ class Command(BaseCommand):
             {'name': 'Завтрак', 'color': '#00FF00', 'slug': 'breakfast'},
             {'name': 'Обед', 'color': '#FF0000', 'slug': 'dinner'},
             {'name': 'Ужин', 'color': '#0000FF', 'slug': 'supper'}
-            ]
+        ]
         Tag.objects.bulk_create(Tag(**tag) for tag in data)
-        self.stdout.write(self.style.SUCCESS('Тэги успешно загружены.'))
+        self.stdout.write(self.style.SUCCESS('Тэги загружены.'))
