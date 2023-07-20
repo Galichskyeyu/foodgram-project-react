@@ -263,7 +263,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 class TagsViewSet(
         PermissionAndPaginationMixin,
         viewsets.ModelViewSet):
-    """Список тэгов."""
+    """Список тегов."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer

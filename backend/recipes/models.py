@@ -9,7 +9,7 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     name = models.CharField(
-        'Название',
+        'Название ингридиента',
         max_length=200,
     )
     measurement_unit = models.CharField(
@@ -28,7 +28,7 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        'Название',
+        'Название тега',
         max_length=200,
         unique=True,
     )
@@ -44,9 +44,9 @@ class Tag(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Тэг'
-        verbose_name_plural = 'Тэги'
-        ordering = ['-id']
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -60,17 +60,17 @@ class Recipe(models.Model):
         verbose_name='Автор',
     )
     name = models.CharField(
-        'Название',
+        'Название рецепта',
         max_length=200,
     )
     image = models.ImageField(
-        'Картинка',
+        'Картинка рецепта',
         upload_to='static/recipe/',
         blank=True,
         null=True,
     )
     text = models.TextField(
-        'Описание',
+        'Описание рецепта',
     )
     cooking_time = models.BigIntegerField(
         'Время приготовления (в минутах)',
@@ -81,7 +81,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-        verbose_name='Тэги',
+        verbose_name='Теги',
         related_name='recipes',
     )
     cooking_time = models.PositiveSmallIntegerField(
@@ -100,7 +100,7 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ('-pub_date',)
+        ordering = ['-pub_date']
 
     def __str__(self):
         return f'{self.author.email}, {self.name}.'
@@ -130,7 +130,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Количество'
         verbose_name_plural = 'Единицы измерения'
-        ordering = ['-id',]
+        ordering = ['recipe']
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
@@ -144,7 +144,7 @@ class Subscribe(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='follower',
-        verbose_name='Пользователь',
+        verbose_name='Подписчик',
     )
     author = models.ForeignKey(
         User,
@@ -160,7 +160,7 @@ class Subscribe(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ['-id',]
+        ordering = ['-created']
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
@@ -183,12 +183,12 @@ class FavoriteRecipe(models.Model):
     recipe = models.ManyToManyField(
         Recipe,
         related_name='favorite_recipe',
-        verbose_name='Избранный рецепт',
+        verbose_name='Рецепт в избранном',
     )
 
     class Meta:
-        verbose_name = 'Избранный рецепт'
-        verbose_name_plural = 'Избранные рецепты'
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
 
     def __str__(self):
         list_ = [item['name'] for item in self.recipe.values('name')]
@@ -213,17 +213,18 @@ class ShoppingCart(models.Model):
     recipe = models.ManyToManyField(
         Recipe,
         related_name='shopping_cart',
-        verbose_name='Покупка',
+        verbose_name='Рецепт в покупках',
     )
 
     class Meta:
-        verbose_name = 'Покупка'
-        verbose_name_plural = 'Покупки'
-        ordering = ['-id',]
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'
+        ordering = ['user']
 
     def __str__(self):
         list_ = [item['name'] for item in self.recipe.values('name')]
-        return f'Пользователь {self.user} добавил рецепт {list_} в покупки.'
+        return (f'Пользователь {self.user} добавил рецепт {list_} '
+                f'в список покупок.')
 
     @receiver(post_save, sender=User)
     def create_shopping_cart(

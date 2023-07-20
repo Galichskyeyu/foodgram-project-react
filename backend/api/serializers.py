@@ -190,11 +190,11 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         tags = data['tags']
         if not tags:
             raise serializers.ValidationError(
-                'Нужен хотя бы один тэг для рецепта!')
+                'Нужен хотя бы один тег для рецепта!')
         for tag_name in tags:
             if not Tag.objects.filter(name=tag_name).exists():
                 raise serializers.ValidationError(
-                    f'Тэга {tag_name} не существует!')
+                    f'Тега {tag_name} не существует!')
         return data
 
     def validate_cooking_time(self, cooking_time):
