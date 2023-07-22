@@ -7,7 +7,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'get_secret_key')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost, 127.0.0.1').split(', ')
 
-DEBUG = False
+DEBUG = True
 
 AUTH_USER_MODEL = 'users.User'
 

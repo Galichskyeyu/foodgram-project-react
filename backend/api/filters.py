@@ -1,12 +1,10 @@
-from django.core.exceptions import ValidationError
 import django_filters as filters
-
-from users.models import User
+from django.core.exceptions import ValidationError
 from recipes.models import Ingredient, Recipe
+from users.models import User
 
 
-class TagsMultipleChoiceField(
-        filters.fields.MultipleChoiceField):
+class TagsMultipleChoiceField(filters.fields.MultipleChoiceField):
     def validate(self, value):
         if self.required and not value:
             raise ValidationError(
@@ -37,13 +35,13 @@ class RecipeFilter(filters.FilterSet):
         queryset=User.objects.all())
     is_in_shopping_cart = filters.BooleanFilter(
         widget=filters.widgets.BooleanWidget(),
-        label='В корзине.')
+        label='В списке покупок')
     is_favorited = filters.BooleanFilter(
         widget=filters.widgets.BooleanWidget(),
-        label='В избранных.')
+        label='В избранном')
     tags = filters.AllValuesMultipleFilter(
         field_name='tags__slug',
-        label='Ссылка')
+        label='Slug')
 
     class Meta:
         model = Recipe

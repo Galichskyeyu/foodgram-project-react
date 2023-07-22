@@ -1,7 +1,6 @@
 from django.contrib import admin
-
-from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
-                     ShoppingCart, Subscribe, Tag)
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe,
+                            RecipeIngredient, ShoppingCart, Subscribe, Tag)
 
 
 class RecipeIngredientAdmin(admin.StackedInline):
@@ -11,9 +10,13 @@ class RecipeIngredientAdmin(admin.StackedInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('get_author', 'name', 'get_tags', 'get_favorite_count',)
+    list_display = (
+        'id', 'get_author', 'name',
+        'get_tags', 'get_favorite_count',
+    )
     search_fields = ('name',)
     list_filter = ('author__username', 'name', 'tags__name',)
+    inlines = (RecipeIngredientAdmin,)
     empty_value_display = '-пусто-'
 
     @admin.display(description='Автор')
@@ -33,7 +36,7 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'color', 'slug',
+        'id', 'name', 'color', 'slug',
     )
     search_fields = ('name', 'slug',)
     empty_value_display = '-пусто-'
@@ -42,7 +45,7 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'measurement_unit',
+        'id', 'name', 'measurement_unit',
     )
     search_fields = ('name',)
     list_filter = ('name',)
@@ -52,7 +55,7 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Subscribe)
 class SubscribeAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'author', 'created',
+        'id', 'user', 'author', 'created',
     )
     search_fields = (
         'user__email', 'author__email',
@@ -63,7 +66,7 @@ class SubscribeAdmin(admin.ModelAdmin):
 @admin.register(FavoriteRecipe)
 class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'get_recipe', 'get_count',
+        'id', 'user', 'get_recipe', 'get_count',
     )
     empty_value_display = '-пусто-'
 
@@ -80,7 +83,7 @@ class FavoriteRecipeAdmin(admin.ModelAdmin):
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'get_recipe', 'get_count',
+        'id', 'user', 'get_recipe', 'get_count',
     )
     empty_value_display = '-пусто-'
 
