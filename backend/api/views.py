@@ -81,7 +81,7 @@ class AddAndDeleteSubscribe(
             )
         if request.user.follower.filter(author=instance).exists():
             return Response(
-                {'errors': 'Уже подписан!'},
+                {'errors': 'Нельзя подписаться повторно.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         subs = request.user.follower.create(author=instance)
@@ -301,10 +301,10 @@ def set_password(request):
     if serializer.is_valid():
         serializer.save()
         return Response(
-            {'message': 'Пароль изменен!'},
+            {'message': 'Пароль изменен.'},
             status=status.HTTP_201_CREATED
         )
     return Response(
-        {'error': 'Введите верные данные!'},
+        {'error': 'Ошибка в данных.'},
         status=status.HTTP_400_BAD_REQUEST
     )
