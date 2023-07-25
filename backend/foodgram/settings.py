@@ -11,6 +11,8 @@ DEBUG = True
 
 AUTH_USER_MODEL = 'users.User'
 
+MAX_LENGTH = 200
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

@@ -23,16 +23,17 @@ from rest_framework.permissions import (SAFE_METHODS, AllowAny,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from .serializers import (IngredientSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, SubscribeRecipeSerializer,
-                          SubscribeSerializer, TagSerializer, TokenSerializer,
-                          UserCreateSerializer, UserListSerializer,
-                          UserPasswordSerializer)
+from api.serializers import (IngredientSerializer, RecipeReadSerializer,
+                             RecipeWriteSerializer, SubscribeRecipeSerializer,
+                             SubscribeSerializer, TagSerializer,
+                             TokenSerializer, UserCreateSerializer,
+                             UserListSerializer, UserPasswordSerializer)
 
 User = get_user_model()
 
 
 class GetObjectMixin:
+    """Mixin для удаления/добавления рецептов избранного/списка покупок."""
 
     serializer_class = SubscribeRecipeSerializer
     permission_classes = (AllowAny,)
@@ -45,6 +46,7 @@ class GetObjectMixin:
 
 
 class PermissionAndPaginationMixin:
+    """Mixin для списка ингридиентов и тегов."""
 
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = None
@@ -54,6 +56,7 @@ class AddAndDeleteSubscribe(
     generics.RetrieveDestroyAPIView,
     generics.ListCreateAPIView
 ):
+    """Подписка и отписка от пользователя."""
 
     serializer_class = SubscribeSerializer
 
@@ -97,6 +100,7 @@ class AddAndDeleteFavoriteRecipe(
         generics.RetrieveDestroyAPIView,
         generics.ListCreateAPIView
 ):
+    """Добавление/удаление рецепта из избранного."""
 
     def create(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -113,6 +117,7 @@ class AddAndDeleteShoppingCart(
         generics.RetrieveDestroyAPIView,
         generics.ListCreateAPIView
 ):
+    """Добавление/удаление рецепта из списка покупок."""
 
     def create(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -125,6 +130,7 @@ class AddAndDeleteShoppingCart(
 
 
 class AuthToken(ObtainAuthToken):
+    """Авторизация пользователя."""
 
     serializer_class = TokenSerializer
     permission_classes = (AllowAny,)
@@ -141,6 +147,7 @@ class AuthToken(ObtainAuthToken):
 
 
 class UsersViewSet(UserViewSet):
+    """Пользователи."""
 
     serializer_class = UserListSerializer
     permission_classes = (IsAuthenticated,)
@@ -181,6 +188,7 @@ class UsersViewSet(UserViewSet):
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
+    """Рецепты."""
 
     queryset = Recipe.objects.all()
     filterset_class = RecipeFilter
@@ -276,6 +284,7 @@ class TagsViewSet(
     PermissionAndPaginationMixin,
     viewsets.ModelViewSet
 ):
+    """Список тэгов."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -285,6 +294,7 @@ class IngredientsViewSet(
         PermissionAndPaginationMixin,
         viewsets.ModelViewSet
 ):
+    """Список ингредиентов."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer

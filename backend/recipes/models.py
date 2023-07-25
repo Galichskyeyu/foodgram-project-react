@@ -3,6 +3,7 @@ from django.core import validators
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from foodgram.settings import MAX_LENGTH
 
 User = get_user_model()
 
@@ -10,11 +11,11 @@ User = get_user_model()
 class Ingredient(models.Model):
     name = models.CharField(
         'Название ингридиента',
-        max_length=200,
+        max_length=MAX_LENGTH,
     )
     measurement_unit = models.CharField(
         'Единицы измерения',
-        max_length=200,
+        max_length=MAX_LENGTH,
     )
 
     class Meta:
@@ -29,17 +30,17 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     name = models.CharField(
         'Название тега',
-        max_length=200,
+        max_length=MAX_LENGTH,
         unique=True,
     )
     color = models.CharField(
         'Цветовой HEX-код',
-        max_length=7,
+        max_length=50,
         unique=True,
     )
     slug = models.SlugField(
         'Slug',
-        max_length=200,
+        max_length=MAX_LENGTH,
         unique=True,
     )
 
@@ -61,7 +62,7 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         'Название рецепта',
-        max_length=200,
+        max_length=MAX_LENGTH,
     )
     image = models.ImageField(
         'Картинка рецепта',
@@ -72,7 +73,7 @@ class Recipe(models.Model):
     text = models.TextField(
         'Описание рецепта',
     )
-    cooking_time = models.BigIntegerField(
+    cooking_time = models.PositiveIntegerField(
         'Время приготовления (в минутах)',
     )
     ingredients = models.ManyToManyField(
