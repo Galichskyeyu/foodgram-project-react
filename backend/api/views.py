@@ -229,7 +229,7 @@ class UsersViewSet(UserViewSet):
 
 
 class SubscribeViewSet(viewsets.ModelViewSet):
-    """Подписчики."""
+    """Подписки пользователей."""
 
     @action(
         detail=False,
