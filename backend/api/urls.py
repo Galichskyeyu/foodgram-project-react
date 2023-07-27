@@ -1,6 +1,7 @@
 from api.views import (AddAndDeleteFavoriteRecipe, AddAndDeleteShoppingCart,
-                       AddAndDeleteSubscribe, AuthToken, IngredientsViewSet,
-                       RecipesViewSet, TagsViewSet, UsersViewSet, set_password)
+                       AddAndDeleteSubscribe, AuthToken, DownloadCart,
+                       IngredientsViewSet, RecipesViewSet, SubscribeViewSet,
+                       TagsViewSet, UsersViewSet, set_password)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
@@ -38,6 +39,16 @@ urlpatterns = [
         'recipes/<int:recipe_id>/shopping_cart/',
         AddAndDeleteShoppingCart.as_view(),
         name='shopping_cart'
+    ),
+    path(
+        'recipes/download_shopping_cart/',
+        DownloadCart.as_view({'get': 'download_shopping_cart'}),
+        name='download_shopping_cart'
+    ),
+    path(
+        'users/subscriptions/',
+        SubscribeViewSet.as_view({'get': 'subscriptions'}),
+        name='subscriptions'
     ),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
