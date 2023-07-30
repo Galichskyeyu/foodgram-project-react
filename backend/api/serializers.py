@@ -4,7 +4,8 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from drf_base64.fields import Base64ImageField
 from recipes.models import Ingredient, Recipe, RecipeIngredient, Subscribe, Tag
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 
 User = get_user_model()
 
@@ -337,3 +338,19 @@ class SubscribeSerializer(serializers.ModelSerializer):
             recipes,
             many=True,
         ).data
+
+    def validate(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user.id == instance.id:
+            return Response(
+                {'errors': 'Нельзя оформить подписку на себя.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if request.user.follower.filter(author=instance).exists():
+            return Response(
+                {'errors': 'Нельзя подписаться повторно.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        subs = request.user.follower.create(author=instance)
+        serializer = self.get_serializer(subs)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

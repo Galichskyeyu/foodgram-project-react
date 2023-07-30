@@ -27,7 +27,9 @@ urlpatterns = [
     ),
     path(
         'users/<int:user_id>/subscribe/',
-        AddAndDeleteSubscribe.as_view(),
+        AddAndDeleteSubscribe.as_view(
+            {'post': 'create', 'delete': 'perform_destroy'}
+        ),
         name='subscribe'
     ),
     path(

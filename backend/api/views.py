@@ -51,10 +51,7 @@ class PermissionAndPaginationMixin:
     pagination_class = None
 
 
-class AddAndDeleteSubscribe(
-    generics.RetrieveDestroyAPIView,
-    generics.ListCreateAPIView
-):
+class AddAndDeleteSubscribe(viewsets.ModelViewSet):
     """Подписка и отписка от пользователя."""
 
     serializer_class = SubscribeSerializer
@@ -76,22 +73,18 @@ class AddAndDeleteSubscribe(
 
     def create(self, request, *args, **kwargs):
         instance = self.get_object()
-        if request.user.id == instance.id:
-            return Response(
-                {'errors': 'Нельзя оформить подписку на себя.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if request.user.follower.filter(author=instance).exists():
-            return Response(
-                {'errors': 'Нельзя подписаться повторно.'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        subs = request.user.follower.create(author=instance)
-        serializer = self.get_serializer(subs)
+        serializer = self.get_serializer(
+            request.user.follower.create(author=instance)
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def perform_destroy(self, instance):
+    def perform_destroy(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(User, id=user_id)
+        self.check_object_permissions(self.request, user)
+        instance = self.get_object()
         self.request.user.follower.filter(author=instance).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class AddAndDeleteFavoriteRecipe(
