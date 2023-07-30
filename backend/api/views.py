@@ -79,9 +79,6 @@ class AddAndDeleteSubscribe(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def perform_destroy(self, request, *args, **kwargs):
-        user_id = self.kwargs['user_id']
-        user = get_object_or_404(User, id=user_id)
-        self.check_object_permissions(self.request, user)
         instance = self.get_object()
         self.request.user.follower.filter(author=instance).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
