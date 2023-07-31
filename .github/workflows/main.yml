@@ -76,10 +76,8 @@ jobs:
       - build_and_push_to_docker_hub
     if: github.ref == 'refs/heads/master'
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Copy docker-compose.yml via ssh
-        uses: appleboy/scp-action@master
+      - name: pull docker image
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
