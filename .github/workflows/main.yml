@@ -87,8 +87,8 @@ jobs:
             sudo docker pull galichskyeyu/foodgram_backend:latest
             sudo docker pull galichskyeyu/foodgram_frontend:latest
             cd infra/
-            sudo docker-compose stop
-            sudo docker-compose rm backend
+            sudo docker compose stop
+            sudo docker compose rm backend
       - name: docker-compose up
         uses: appleboy/ssh-action@master
         with:
@@ -98,7 +98,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd infra/
-            sudo docker-compose up -d --build
+            sudo docker compose up -d --build
 
   send_message:
     runs-on: ubuntu-latest
