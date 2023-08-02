@@ -85,6 +85,21 @@ scp -i path_to_SSH/SSH_name .env username@server_ip:/home/username/infra/.env
 - server_ip — IP вашего сервера.
 ```
 
+Открыть файл конфигурации веб-сервера и вставить код из листинга:
+```
+sudo nano /etc/nginx/sites-enabled/default
+```
+
+```
+server {
+    server_name <ваш сервер/домен>;
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
+```
+
 Запускаем проект на удаленном сервере из директории /infra:
 
 ```

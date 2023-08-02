@@ -5,10 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'get_secret_key')
 
-DEBUG = os.getenv('DEBUG', default='True') == 'True'
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOSTS', default='localhost').split(', ')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(', ')
 
 AUTH_USER_MODEL = 'users.User'
 
