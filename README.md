@@ -141,7 +141,7 @@ sudo docker compose -f docker-compose.yml exec backend python manage.py load_ing
 
 ```
 http://yp-foodgram2023.ddns.net
-Логин: admin
+Логин: admin@yandex.ru
 Пароль: admin2023
 ```
 
