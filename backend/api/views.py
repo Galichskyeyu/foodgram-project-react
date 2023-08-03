@@ -153,7 +153,9 @@ class DownloadCart(viewsets.ModelViewSet):
                 y_position -= 15
                 if y_position <= 50:
                     page.showPage()
-                    pdfmetrics.registerFont(TTFont('veracrouz', 'veracrouz.ttf'))
+                    pdfmetrics.registerFont(
+                        TTFont('veracrouz', 'veracrouz.ttf')
+                    )
                     x_position, y_position = 50, 800
             page.save()
             buffer.seek(0)
