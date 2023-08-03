@@ -130,7 +130,7 @@ class DownloadCart(viewsets.ModelViewSet):
 
         buffer = io.BytesIO()
         page = canvas.Canvas(buffer)
-        pdfmetrics.registerFont(TTFont('veracrouz', 'veracrouz.ttf'))
+        pdfmetrics.registerFont(TTFont('Vera', 'Vera.ttf'))
         x_position, y_position = 50, 800
         shopping_cart = (
             request.user.shopping_cart.recipe.
@@ -139,7 +139,7 @@ class DownloadCart(viewsets.ModelViewSet):
                 'ingredients__measurement_unit'
             ).annotate(amount=Sum('recipe__amount')).order_by()
         )
-        page.setFont('veracrouz', 14)
+        page.setFont('Vera', 14)
         if shopping_cart:
             indent = 20
             page.drawString(x_position, y_position, 'Cписок ингредиентов:')
@@ -161,7 +161,7 @@ class DownloadCart(viewsets.ModelViewSet):
                 as_attachment=True,
                 filename='shopping_cart.pdf',
             )
-        page.setFont('veracrouz', 24)
+        page.setFont('Vera', 24)
         page.drawString(
             x_position,
             y_position,
