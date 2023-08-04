@@ -222,6 +222,9 @@ class UsersViewSet(UserViewSet):
 class SubscribeViewSet(viewsets.ModelViewSet):
     """Подписки пользователей."""
 
+    def get_queryset(self):
+        return User.objects.filter(following__user=self.request.user)
+
     @action(
         detail=False,
         permission_classes=(IsAuthenticated,)

@@ -49,7 +49,7 @@ urlpatterns = [
     ),
     path(
         'users/subscriptions/',
-        SubscribeViewSet.as_view({'get': 'list'}),
+        SubscribeViewSet.as_view({'get': 'subscriptions'}),
         name='subscriptions'
     ),
     path('', include(router.urls)),
