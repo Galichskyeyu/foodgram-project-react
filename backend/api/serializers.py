@@ -313,11 +313,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(
         source='author.last_name'
     )
+    recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.BooleanField(
         read_only=True
     )
-    recipes_count = serializers.SerializerMethodField(read_only=True)
-    recipes = serializers.SerializerMethodField(read_only=True)
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Subscribe
@@ -332,13 +332,14 @@ class SubscribeSerializer(serializers.ModelSerializer):
     def get_recipes(self, obj):
         request = self.context.get('request')
         limit = request.GET.get('recipes_limit')
-        recipes = obj.recipes.all()
-        if limit:
-            recipes = recipes[:int(limit)]
-        serializer = SubscribeRecipeSerializer(
-            recipes, many=True, read_only=True
+        recipes = (
+            obj.author.recipe.all()[:int(limit)] if limit
+            else obj.author.recipe.all()
         )
-        return serializer.data
+        return SubscribeRecipeSerializer(
+            recipes,
+            many=True,
+        ).data
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
