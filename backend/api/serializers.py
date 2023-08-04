@@ -313,13 +313,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(
         source='author.last_name'
     )
-    recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.BooleanField(
         read_only=True
     )
-    recipes_count = serializers.IntegerField(
-        read_only=True
-    )
+    recipes_count = serializers.SerializerMethodField(read_only=True)
+    recipes = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Subscribe
