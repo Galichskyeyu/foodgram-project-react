@@ -296,6 +296,18 @@ class SubscribeRecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time',)
 
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = (
+            obj.author.recipe.all()[:int(limit)] if limit
+            else obj.author.recipe.all()
+        )
+        return SubscribeRecipeSerializer(
+            recipes,
+            many=True,
+        ).data
+
 
 class SubscribeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
@@ -327,18 +339,6 @@ class SubscribeSerializer(serializers.ModelSerializer):
             'id', 'email', 'username', 'first_name', 'last_name',
             'is_subscribed', 'recipes', 'recipes_count',
         )
-
-    def get_recipes(self, obj):
-        request = self.context.get('request')
-        limit = request.GET.get('recipes_limit')
-        recipes = (
-            obj.author.recipe.all()[:int(limit)] if limit
-            else obj.author.recipe.all()
-        )
-        return SubscribeRecipeSerializer(
-            recipes,
-            many=True,
-        ).data
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()

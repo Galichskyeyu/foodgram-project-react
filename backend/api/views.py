@@ -15,7 +15,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingCart,
-                            Tag)
+                            Subscribe, Tag)
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
@@ -224,16 +224,16 @@ class SubscribeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=False,
-        methods=['GET'],
-        permission_classes=[IsAuthenticated]
+        permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request):
         user = request.user
-        subscriptions = User.objects.filter(
-            subscribing__user=user
-        ).prefetch_related('recipes')
-        page = self.paginate_queryset(subscriptions)
-        serializer = self.get_serializer(page, many=True)
+        queryset = Subscribe.objects.filter(user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = SubscribeSerializer(
+            pages, many=True,
+            context={'request': request}
+        )
         return self.get_paginated_response(serializer.data)
 
 
