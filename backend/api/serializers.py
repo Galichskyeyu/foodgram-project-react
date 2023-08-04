@@ -337,7 +337,9 @@ class SubscribeSerializer(serializers.ModelSerializer):
         recipes = obj.recipes.all()
         if limit:
             recipes = recipes[:int(limit)]
-        serializer = SubscribeRecipeSerializer(recipes, many=True, read_only=True)
+        serializer = SubscribeRecipeSerializer(
+            recipes, many=True, read_only=True
+        )
         return serializer.data
 
     def validate(self, request, *args, **kwargs):
