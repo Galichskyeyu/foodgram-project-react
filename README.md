@@ -145,6 +145,5 @@ http://yp-foodgram2023.ddns.net
 Пароль: admin2023
 ```
 
-
 ## Автор: 
 ### [Эмин Галичский](https://github.com/Galichskyeyu "Эмин Галичский")
