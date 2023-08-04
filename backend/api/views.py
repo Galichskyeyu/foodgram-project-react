@@ -222,21 +222,18 @@ class UsersViewSet(UserViewSet):
 class SubscribeViewSet(viewsets.ModelViewSet):
     """Подписки пользователей."""
 
-    def get_queryset(self):
-        return User.objects.filter(following__user=self.request.user)
-
     @action(
         detail=False,
-        permission_classes=(IsAuthenticated,)
+        methods=['GET'],
+        permission_classes=[IsAuthenticated]
     )
     def subscriptions(self, request):
         user = request.user
-        queryset = Subscribe.objects.filter(user=user)
-        pages = self.paginate_queryset(queryset)
-        serializer = SubscribeSerializer(
-            pages, many=True,
-            context={'request': request}
-        )
+        subscriptions = User.objects.filter(
+            subscribing__user=user
+        ).prefetch_related('recipes')
+        page = self.paginate_queryset(subscriptions)
+        serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
 
