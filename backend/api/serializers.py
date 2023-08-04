@@ -330,12 +330,15 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, obj):
         request = self.context.get('request')
-        recipes_limit = request.GET.get('recipes_limit')
-        if recipes_limit:
-            recipes = obj.recipes.all()[:(int(recipes_limit))]
-        else:
-            recipes = obj.recipes.all()
-        return SubscribeRecipeSerializer(recipes, many=True).data
+        limit = request.GET.get('recipes_limit')
+        recipes = (
+            obj.author.recipe.all()[:int(limit)] if limit
+            else obj.author.recipe.all()
+        )
+        return SubscribeRecipeSerializer(
+            recipes,
+            many=True,
+        ).data
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
