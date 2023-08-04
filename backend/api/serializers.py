@@ -317,7 +317,9 @@ class SubscribeSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.BooleanField(
         read_only=True
     )
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.IntegerField(
+        read_only=True
+    )
 
     class Meta:
         model = Subscribe
