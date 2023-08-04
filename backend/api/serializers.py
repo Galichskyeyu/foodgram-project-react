@@ -327,7 +327,16 @@ class SubscribeSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes_count(self, obj):
-        return obj.recipes.count()
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes_count = (
+            obj.author.recipes_count.all()[:int(limit)] if limit
+            else obj.author.recipes_count.all()
+        )
+        return SubscribeRecipeSerializer(
+            recipes_count,
+            many=True,
+        ).data
 
     def get_recipes(self, obj):
         request = self.context.get('request')
