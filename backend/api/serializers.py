@@ -334,7 +334,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         return SubscribeSerializer(
             object.recipes.all()[:RECIPES_LIMIT], many=True
         ).data
- 
+
     @staticmethod
     def get_recipes_count(object):
         return object.recipes.count()
