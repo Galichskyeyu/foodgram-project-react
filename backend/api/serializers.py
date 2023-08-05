@@ -317,7 +317,9 @@ class SubscribeSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.BooleanField(
         read_only=True
     )
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.IntegerField(
+        read_only=True
+    )
 
     class Meta:
         model = Subscribe
@@ -337,9 +339,6 @@ class SubscribeSerializer(serializers.ModelSerializer):
             recipes,
             many=True,
         ).data
-
-    def get_recipes_count(self, obj):
-        return obj.recipes.count()
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
