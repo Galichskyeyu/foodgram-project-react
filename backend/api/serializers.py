@@ -329,16 +329,16 @@ class SubscribeSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes(self, obj):
-        """Получение рецептов автора."""
-        request = self.context.get("request")
-        limit = request.GET.get("recipes_limit")
-        queryset = obj.author.recipes.all()
-        if limit:
-            queryset = queryset[: int(limit)]
-        return SubscribeSerializer(queryset, many=True).data
-
-    def get_recipes_count(self, obj):
-        return obj.author.recipes.all().count()
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = (
+            obj.author.recipe.all()[:int(limit)] if limit
+            else obj.author.recipe.all()
+        )
+        return SubscribeRecipeSerializer(
+            recipes,
+            many=True,
+        ).data
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
