@@ -8,7 +8,6 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 
 User = get_user_model()
-RECIPES_LIMIT = 3
 
 
 class TokenSerializer(serializers.Serializer):
@@ -329,15 +328,20 @@ class SubscribeSerializer(serializers.ModelSerializer):
             'is_subscribed', 'recipes', 'recipes_count',
         )
 
-    @staticmethod
-    def get_recipes(object):
-        return SubscribeSerializer(
-            object.recipes.all()[:RECIPES_LIMIT], many=True
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = (
+            obj.author.recipe.all()[:int(limit)] if limit
+            else obj.author.recipe.all()
+        )
+        return SubscribeRecipeSerializer(
+            recipes,
+            many=True,
         ).data
 
-    @staticmethod
-    def get_recipes_count(object):
-        return object.recipes.count()
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
