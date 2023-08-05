@@ -8,6 +8,7 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 
 User = get_user_model()
+RECIPES_LIMIT = 3
 
 
 class TokenSerializer(serializers.Serializer):
@@ -294,41 +295,49 @@ class SubscribeRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ('id', 'name', 'image', 'cooking_time',)
 
 
 class SubscribeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
-        source='author.id')
+        source='author.id'
+    )
     email = serializers.EmailField(
-        source='author.email')
+        source='author.email'
+    )
     username = serializers.CharField(
-        source='author.username')
+        source='author.username'
+    )
     first_name = serializers.CharField(
-        source='author.first_name')
+        source='author.first_name'
+    )
     last_name = serializers.CharField(
-        source='author.last_name')
+        source='author.last_name'
+    )
     recipes = serializers.SerializerMethodField()
-    is_subscribed = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
+    is_subscribed = serializers.BooleanField(
+        read_only=True
+    )
+    recipes_count = serializers.IntegerField(
+        read_only=True
+    )
 
     class Meta:
         model = Subscribe
         fields = (
-            'email', 'id', 'username', 'first_name', 'last_name',
-            'is_subscribed', 'recipes', 'recipes_count',)
+            'id', 'email', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'recipes', 'recipes_count',
+        )
 
-    def get_recipes(self, obj):
-        """Получение рецептов автора."""
-        request = self.context.get("request")
-        limit = request.GET.get("recipes_limit")
-        queryset = obj.author.recipes.all()
-        if limit:
-            queryset = queryset[: int(limit)]
-        return SubscribeRecipeSerializer(queryset, many=True).data
-
-    def get_recipes_count(self, obj):
-        return obj.author.recipes.all().count()
+    @staticmethod
+    def get_recipes(object):
+        return SubscribeSerializer(
+            object.recipes.all()[:RECIPES_LIMIT], many=True
+        ).data
+ 
+    @staticmethod
+    def get_recipes_count(object):
+        return object.recipes.count()
 
     def validate(self, request, *args, **kwargs):
         instance = self.get_object()
