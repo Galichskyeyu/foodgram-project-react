@@ -318,7 +318,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         read_only=True
     )
     recipes_count = serializers.ReadOnlyField(
-        source='author.recipes.count'
+        source='author.recipe.count'
     )
 
     class Meta:
