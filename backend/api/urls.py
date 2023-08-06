@@ -49,7 +49,9 @@ urlpatterns = [
     ),
     path(
         'users/subscriptions/',
-        SubscribeViewSet.as_view({'get': 'subscriptions', 'post': 'subscriptions'}),
+        SubscribeViewSet.as_view({
+            'get': 'subscriptions', 'post': 'subscriptions',
+        }),
         name='subscriptions'
     ),
     path('', include(router.urls)),
