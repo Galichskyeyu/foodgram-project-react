@@ -137,13 +137,5 @@ sudo docker compose -f docker-compose.yml exec backend python manage.py load_tag
 sudo docker compose -f docker-compose.yml exec backend python manage.py load_ingrs
 ```
 
-Информация для самого лучшего ревьюера ٩(◕‿◕)۶ : 
-
-```
-http://yp-foodgram2023.ddns.net
-Логин: admin@yandex.ru
-Пароль: admin2023
-```
-
 ## Автор: 
 ### [Эмин Галичский](https://github.com/Galichskyeyu "Эмин Галичский")
